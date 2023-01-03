@@ -1,0 +1,188 @@
+{
+	"better-comments.highlightPlainText": false,
+	"better-comments.tags": [
+		{
+			"tag": "**",
+			"color": "#98C379",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": true,
+			"italic": false
+		},
+		{
+			"tag": "_",
+			"strikethrough": false,
+			"underline": true,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "~~",
+			"strikethrough": true,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		}
+	],
+	"cSpell.language": "en,it,pl",
+	"debug.inlineValues": "on",
+	"debug.openDebug": "openOnSessionStart",
+	"debug.toolBarLocation": "docked",
+	"editor.cursorSurroundingLinesStyle": "all",
+	"editor.formatOnType": true,
+	"editor.minimap.maxColumn": 80,
+	"editor.minimap.showSlider": "always",
+	"editor.parameterHints.cycle": true,
+	"editor.quickSuggestionsDelay": 5,
+	"editor.renderLineHighlight": "all",
+	"editor.renderWhitespace": "boundary",
+	"editor.rulers": [
+		120
+	],
+	"editor.showFoldingControls": "always",
+	"editor.smoothScrolling": true,
+	"files.eol": "\n",
+	"files.insertFinalNewline": true,
+	"files.trimFinalNewlines": true,
+	"files.trimTrailingWhitespace": true,
+	"git.inputValidationLength": 76,
+	"git.inputValidationSubjectLength": null,
+	"indentRainbow.ignoreLinePatterns": [
+		"/.*\\*.*/g", // ignore commented out lines "//"
+		"/\t+ +.*/g" // ignore mixed, first tabs then spaces for code align
+	],
+	"todo-tree.general.showIconsInsteadOfTagsInStatusBar": true,
+	"todo-tree.tree.tagsOnly": true,
+	"todo-tree.tree.buttons.viewStyle": false,
+	"todo-tree.tree.scanMode": "workspace",
+	"todo-tree.tree.showCurrentScanMode": false,
+	"todo-tree.general.tags": [
+		"BUG",
+		"HACK",
+		"FIXME",
+		"TODO",
+		"MARK",
+		"???",
+		"WARN",
+		"!!!"
+	],
+	"todo-tree.filtering.excludeGlobs": [
+		"**/vendor/**",
+		"**/node_modules/**",
+		"**/dist/**",
+		"**/bower_components/**",
+		"**/build/**",
+		"**/.vscode/**",
+		"**/.github/**",
+		"**/.git**",
+		"**/_output/**",
+		"**/*.min.*",
+		"**/*.map",
+		"**/rdp/**",
+		"**/prove/**"
+	],
+	"todo-tree.highlights.defaultHighlight": {
+		"type": "text-and-comment"
+	},
+	"todo-tree.highlights.customHighlight": {
+		"BUG": {
+			"icon": "bug",
+			"foreground": "#f00"
+		},
+		"HACK": {
+			"icon": "tools",
+			"foreground": "#f00"
+		},
+		"FIXME": {
+			"icon": "flame",
+			"foreground": "#f00"
+		},
+		"TODO": {
+			"icon": "check-circle",
+			"foreground": "#fbff00"
+		},
+		"MARK": {
+			"foreground": "#885dff",
+			"icon": "bookmark-fill"
+		},
+		"???": {
+			"foreground": "#00aeff",
+			"icon": "question"
+		},
+		"WARN": {
+			"icon": "alert",
+			"foreground": "#ff9900"
+		},
+		"!!!": {
+			"icon": "alert",
+			"foreground": "#ff5100"
+		}
+	},
+	"problems.showCurrentInStatus": true,
+	"rewrap.autoWrap.enabled": true,
+	"markdown.extension.toc.levels": "2..3",
+	"rewrap.wrappingColumn": 120,
+	"scm.alwaysShowActions": true,
+	"scm.alwaysShowRepositories": true,
+	"scm.providerCountBadge": "auto",
+	"search.showLineNumbers": true,
+	"search.useGlobalIgnoreFiles": true,
+	"javascript.format.insertSpaceBeforeFunctionParenthesis": false,
+	"javascript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+	"javascript.format.semicolons": "insert",
+	"javascript.autoClosingTags": true,
+	"javascript.format.placeOpenBraceOnNewLineForFunctions": true,
+	"javascript.format.insertSpaceAfterCommaDelimiter": true,
+	"javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": true,
+	"javascript.format.insertSpaceAfterConstructor": false,
+	"javascript.format.insertSpaceAfterKeywordsInControlFlowStatements": true,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis": false,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBrackets": false,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": true,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingTemplateStringBraces": false,
+	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingJsxExpressionBraces": false,
+	"javascript.format.insertSpaceAfterSemicolonInForStatements": true,
+	"javascript.format.insertSpaceBeforeAndAfterBinaryOperators": true,
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"indentRainbow.colorOnWhiteSpaceOnly": true,
+	"editor.hover.above": false,
+	"editor.bracketPairColorization.enabled": true,
+	"javascript.updateImportsOnFileMove.enabled": "never",
+	"typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+	"typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+	"typescript.format.semicolons": "insert",
+	"typescript.inlayHints.parameterNames.enabled": "literals",
+	"typescript.inlayHints.variableTypes.enabled": true,
+	"typescript.referencesCodeLens.enabled": true,
+	"typescript.suggest.completeFunctionCalls": true,
+	"typescript.surveys.enabled": false,
+	"todo-tree.regex.regexCaseSensitive": false,
+	"todo-tree.general.debug": true,
+	"todo-tree.ripgrep.ripgrepArgs": "--max-columns=1000 --no-config --pcre2",
+	"cSpell.words": [
+		"camelcase",
+		"Cencioni",
+		"hcmd",
+		"Logevent",
+		"lwsso",
+		"notclients",
+		"plusplus",
+		"rdpjs",
+		"Scancode",
+		"setinuse"
+	],
+	"[javascript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
+	},
+	"[json]": {
+        "editor.defaultFormatter": "j-brooke.fracturedjsonvsc"
+    },
+	"[jsonc]": {
+        "editor.defaultFormatter": "j-brooke.fracturedjsonvsc"
+    },
+}

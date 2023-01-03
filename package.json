@@ -1,0 +1,51 @@
+{
+	"name": "log4js-node-console",
+	"version": "1.0.0",
+	"description": "Compatibility layer between log4js and Node.js console",
+	"homepage": "https://github.com/l0ner/log4js-node-console#readme",
+	"bugs":{
+		"url": "https://github.com/l0ner/log4js-node-console/issues"
+	},
+	"repository": "github:l0ner/log4js-node-console",
+	"main": "src/log4js-node-console.js",
+	"types": "types/log4js-node-console.d.ts",
+	"files": [
+		"types/log4js-node-console.d.ts",
+		"README.md",
+		"LICENSE.md"
+	],
+	"keywords": [
+		"logging",
+		"log",
+		"console",
+		"log4js",
+		"node"
+	],
+	"directories": {
+		"lib": "src"
+	},
+	"engines": {
+		"node": ">=8.0"
+	},
+	"browser": {
+		"os": false
+	},
+	"scripts": {
+		"typings": "tsc -p types/tsconfig.json"
+	},
+	"author": "Pawel Soltys <pwslts@gmail.com> (https://github.com/l0ner)",
+	"license": "GPL-3.0-or-later",
+	"devDependencies": {
+		"eslint": "^8.31.0",
+		"eslint-plugin-align-assignments": "^1.1.2",
+		"eslint-plugin-eslint-comments": "^3.2.0",
+		"eslint-plugin-jsdoc": "^39.6.4"
+	},
+	"dependencies": {
+		"app-root-dir": "^1.0.2",
+		"log4js": "^6.7.1"
+	},
+	"optionalDependencies": {
+		"node-watch": "^0.7.3"
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"recommendations": [
+		"humao.rest-client",
+		"j-zeppenfeld.tab-indent-space-align",
+		"gruntfuggly.todo-tree",
+		"shardulm94.trailing-spaces",
+		"sergelamikhov.aligntokens",
+		"wwm.better-align",
+		"streetsidesoftware.code-spell-checker",
+		"eamodio.gitlens",
+		"rsbondi.highlight-words",
+		"wix.vscode-import-cost",
+		"oderwat.indent-rainbow",
+		"byi8220.indented-block-highlighting",
+		"streetsidesoftware.code-spell-checker-italian",
+		"christian-kohler.path-intellisense",
+		"cosminalco.pomodoro",
+		"sonarsource.sonarlint-vscode",
+		"aaron-bond.better-comments",
+		"stkb.rewrap",
+		"dbaeumer.vscode-eslint",
+		"j-brooke.fracturedjsonvsc"
+	]
+}

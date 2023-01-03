@@ -1,0 +1,15 @@
+{
+	"env"          : {"commonjs": true, "es2021": true, "node": true},
+	"plugins"      : ["align-assignments", "jsdoc", "eslint-comments"],
+	"extends"      : [
+		"eslint:recommended", "plugin:jsdoc/recommended",
+		"plugin:eslint-comments/recommended"
+	],
+	"parserOptions": {"ecmaVersion": 13},
+	"rules"        : {
+		"eslint-comments/no-use"                       : [
+			"error",
+			{ "allow": ["eslint-disable-line", "eslint-disable-next-line"] }
+		]
+	}
+}
