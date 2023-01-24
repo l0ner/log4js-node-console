@@ -65,7 +65,7 @@ class Log4jsConsole
 	#printTrace = false;
 	#stackTraceLimit = 10 + traceOffset;
 	#includeFunctionInCategory = true;
-	#ignoreCategoryElements = ['', 'node_modules', '<anonymous>', 'Object'];
+	#ignoreCategoryElements = ['', 'node_modules', '<anonymous>', 'Object', 'Timeout', '_onTimeout'];
 	#inspectDepth = 30;
 	#inspectCompact = true;
 
