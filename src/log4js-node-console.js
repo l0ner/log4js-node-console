@@ -65,6 +65,9 @@ class Log4jsConsole
 	#printTrace = false;
 	#stackTraceLimit = 10 + traceOffset;
 	#includeFunctionInCategory = true;
+	#ignoreCategoryElements = ['', 'node_modules', '<anonymous>', 'Object'];
+	#inspectDepth = 30;
+	#inspectCompact = true;
 
 	#tableTransform = null;
 	#tableConsole = null;
@@ -97,8 +100,17 @@ class Log4jsConsole
 			if (options.stackTraceLimit)
 				this.#stackTraceLimit = options.stackTraceLimit + traceOffset;
 
-			if (options.includeFunctionInCatagory)
-				this.#includeFunctionInCategory = options.includeFunctionInCatagory;
+			if (options.includeFunctionInCategory)
+				this.#includeFunctionInCategory = options.includeFunctionInCategory;
+
+			if (options.ignoreCategoryElements)
+				this.#ignoreCategoryElements = this.#ignoreCategoryElements.concat(options.ignoreCategoryElements);
+
+			if (options.inspectDepth)
+				this.#inspectDepth = options.inspectDepth;
+
+			if (options.inspectCompact)
+				this.#inspectCompact = !options.inspectCompact;
 		}
 
 		this.#tableTransform = new stream.Transform({ transform(chunk, enc, cb) { cb(null, chunk); } });
@@ -166,7 +178,12 @@ class Log4jsConsole
 
 		const logger = this.#getLogger(this.#getCallerName());
 		logger.callStackLinesToSkip = 0;
-		logger.log(this.#dirLevel, util.inspect(obj, showHidden, depth, colors));
+		logger.log(this.#dirLevel, util.inspect(obj, {
+			showHidden,
+			depth,
+			colors,
+			breakLength: Infinity
+		}));
 		logger.callStackLinesToSkip = traceSkip;
 	}
 
@@ -191,12 +208,12 @@ class Log4jsConsole
 			stack = `\n${new Error().stack.split('\n').slice(2).join('\n')}`;
 			Error.stackTraceLimit = defaultStackDepth;
 		}
-		this.#getLogger(this.#getCallerName()).trace(message, ...args, stack);
+		this.#getLogger(this.#getCallerName()).trace(this.#formatArguments(message, ...args), stack);
 	}
-	debug(data, ...args) { this.#getLogger(this.#getCallerName()).debug(data, ...args); }
-	info(data, ...args) { this.#getLogger(this.#getCallerName()).info(data, ...args); }
-	warn(data, ...args) { this.#getLogger(this.#getCallerName()).warn(data, ...args); }
-	error(data, ...args) { this.#getLogger(this.#getCallerName()).error(data, ...args); }
+	debug(data, ...args) { this.#getLogger(this.#getCallerName()).debug(this.#formatArguments(data, ...args)); }
+	info(data, ...args) { this.#getLogger(this.#getCallerName()).info(this.#formatArguments(data, ...args)); }
+	warn(data, ...args) { this.#getLogger(this.#getCallerName()).warn(this.#formatArguments(data, ...args)); }
+	error(data, ...args) { this.#getLogger(this.#getCallerName()).error(this.#formatArguments(data, ...args)); }
 	log = this.info;
 
 	table(tabularData, properties)
@@ -228,7 +245,7 @@ class Log4jsConsole
 	//#region Misc
 	assert(value, ...message)
 	{
-		if(value === '' || !value)
+		if (value === '' || !value)
 		{
 			const logger = this.#getLogger(this.#getCallerName());
 			logger.callStackLinesToSkip = 0;
@@ -256,7 +273,7 @@ class Log4jsConsole
 		{
 			this.#defaultConsole.error(`Error while reconfiguring logging: ${e}`);
 		}
-	}
+	};
 
 	#getLogger(caller)
 	{
@@ -266,27 +283,83 @@ class Log4jsConsole
 			this.#loggerCache[caller].callStackLinesToSkip = traceSkip;
 		}
 
-		return this.#loggerCache[caller]
+		return this.#loggerCache[caller];
 	}
 
 	#getCallerName()
 	{
 		const stack = new Error().stack.split('\n')[3].split(' ');
-		const callerFileElements = stack[6].replace(appRootDir, '').split('.')[0].split('/').slice(1);
+		// this.#defaultConsole.debug('Stack elements', stack);
+		// this.#defaultConsole.debug('App root dir', appRootDir);
+		let callerFileElements = stack[6]
+			.replace(appRootDir, '')
+			.split('.')[0]
+			.split('/')
+			.slice(1);
+
+		for (const elem of this.#ignoreCategoryElements)
+			callerFileElements = callerFileElements.filter(v => v !== elem);
+		// this.#defaultConsole.debug('Caller file elements', callerFileElements);
 
 		let caller = callerFileElements.join('.');
-		if(callerFileElements[0] === 'node_modules')
-			caller = `${callerFileElements.slice(0,2).join('.')}.${callerFileElements.slice(-1)}`;
+		// this.#defaultConsole.debug('Caller', caller);
+		// if(callerFileElements[0] === 'node_modules')
+		// 	caller = `${callerFileElements.slice(0,2).join('.')}.${callerFileElements.slice(-1)}`;
+		// this.#defaultConsole.debug('Caller', caller);
 
-		if(this.#includeFunctionInCategory && stack[5] !== 'Object.<anonymous>')
-			caller += `.${stack[5].replace('Object.', '')}()`; // always remove 'Object' to make modules appear nicely
+		// this.#defaultConsole.debug('Caller function', stack[5]);
+		if (this.#includeFunctionInCategory && stack[5] !== 'Object.<anonymous>')
+		{
+			let callerFunction = stack[5].split('.');
 
+			for (const elem of this.#ignoreCategoryElements)
+				callerFunction = callerFunction.filter(v => v !== elem);
+			// this.#defaultConsole.debug('Caller function elements', callerFunction);
+			if (callerFunction.length > 0)
+				caller += `.${callerFunction.join('.')}()`; // always remove 'Object' to make modules appear nicely
+		}
 
-		// this.#defaultConsole.info(callerFileElements[0])
+		// this.#defaultConsole.debug('Caller', caller);
 
 		return caller;
 	}
 
+	#isStringWithFormat(possibleString)
+	{
+		if (typeof possibleString === 'string')
+		{
+			let formats = possibleString.match(/%[sdifjoOc%]/gu);
+			if (formats && formats.length > 0)
+				return true;
+		}
+
+		return false;
+	}
+
+	#formatArguments(...args)
+	{
+		if (this.#isStringWithFormat(args[0]))
+		{
+			const formatString = args.shift();
+			return util.format(formatString, ...args);
+		}
+		else
+		{
+			let elements = [];
+			for (const arg of args)
+			{
+				elements.push(typeof arg !== 'string' ?
+				util.inspect(arg, {
+					depth: this.#inspectDepth,
+					compact: this.#inspectCompact,
+					breakLength: Infinity
+				})
+				: arg);
+			}
+
+			return elements.join(', ');
+		}
+	}
 	//#endregion
 }
 
