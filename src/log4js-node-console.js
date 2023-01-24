@@ -288,16 +288,24 @@ class Log4jsConsole
 
 	#getCallerName()
 	{
-		const stack = new Error().stack.split('\n')[3].split(' ');
+		const fullstack = new Error().stack.split('\n');
+		// this.#defaultConsole.debug('Full stack', fullstack);
+		let stack = fullstack[3].split(' ');
+
+		// filter out stack garbage
 		// this.#defaultConsole.debug('Stack elements', stack);
+		stack = stack.filter(v => (v !== '' && v !== '[as' && ! /.+]/.test(v)));
+		// this.#defaultConsole.debug('Stack elements', stack);
+
 		// this.#defaultConsole.debug('App root dir', appRootDir);
-		let callerFileElements = stack[6]
+		let callerFileElements = stack.pop()
 			.replace(appRootDir, '')
 			.split('.')[0]
 			.split('/')
 			.slice(1);
+		//this.#defaultConsole.debug('caller file elements', callerFileElements);
 
-		for (const elem of this.#ignoreCategoryElements)
+		for(const elem of this.#ignoreCategoryElements)
 			callerFileElements = callerFileElements.filter(v => v !== elem);
 		// this.#defaultConsole.debug('Caller file elements', callerFileElements);
 
@@ -307,15 +315,15 @@ class Log4jsConsole
 		// 	caller = `${callerFileElements.slice(0,2).join('.')}.${callerFileElements.slice(-1)}`;
 		// this.#defaultConsole.debug('Caller', caller);
 
-		// this.#defaultConsole.debug('Caller function', stack[5]);
-		if (this.#includeFunctionInCategory && stack[5] !== 'Object.<anonymous>')
-		{
-			let callerFunction = stack[5].split('.');
+		const functionName = stack.pop();
+		// this.#defaultConsole.debug('Caller function', functionName);
+		if(this.#includeFunctionInCategory && functionName !== 'at' && functionName !== 'Object.<anonymous>') {
+			let callerFunction = functionName.split('.');
 
-			for (const elem of this.#ignoreCategoryElements)
+			for(const elem of this.#ignoreCategoryElements)
 				callerFunction = callerFunction.filter(v => v !== elem);
 			// this.#defaultConsole.debug('Caller function elements', callerFunction);
-			if (callerFunction.length > 0)
+			if(callerFunction.length > 0)
 				caller += `.${callerFunction.join('.')}()`; // always remove 'Object' to make modules appear nicely
 		}
 
