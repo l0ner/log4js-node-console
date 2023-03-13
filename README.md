@@ -1,5 +1,4 @@
-log4js-node-console
-===================
+# log4js-node-console
 
 Compatibility layer between log4js library and Node.js `console` .
 
@@ -77,7 +76,9 @@ TRACE [index.foo()] - foo() called
 
 ## API
 
-The API is 100% same as the one of Node.js [`console`][2] with exception of the constructor.
+The API is 100% same as the one of Node.js [`console`][1] with exception of the constructor.
+
+[1]: https://nodejs.org/docs/latest-v14.x/api/console.html
 
 ### `Log4jsConsole(config, options)`
 
@@ -85,31 +86,29 @@ Will construct a new instance of `log4jsConsole` compatibility layer.
 
 Parameters:
 
-Parameter | Type                 | Description
-----------|----------------------|-------------------------------------------------------------------------------------------
-`config`  | `string` or `object` | Configuration to be passed to `log4js` . See [log4js documentation][1] for details
-`options` | `object`             | Options for `log4js-node-console`.  See [below](#log4js-node-console-options) for details.
+| Parameter | Type                 | Description                                                                                |
+| --------- | -------------------- | ------------------------------------------------------------------------------------------ |
+| `config`  | `string` or `object` | Configuration to be passed to `log4js` . See [log4js documentation][2] for details         |
+| `options` | `object`             | Options for `log4js-node-console`.  See [below](#log4js-node-console-options) for details. |
+
+[2]: https://log4js-node.github.io/log4js-node/
 
 ### Log4js-node-console options
 
 You can pass optional object to `Log4jsConsole` constructor specifying some optional configuration options:
 
-Option                    | Type       | Default | Description
---------------------------|------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-watchConfig               | `boolean`  | `false` | If optional dependency `node-watch` is installed, and `config` passed to `log4js-node` is a string containing path to the log4js-node configuration, watch the configuration file for changes and reload log4js-node when configuration changes. This will allow you to change logging configuration on the fly.
-assertLevel               | `string`   | `warn`  | To which log level `assert()` should output it's messages.
-countLevel                | `string`   | `debug` | To which log level `count()` should output it's messages.
-dirLevel                  | `string`   | `debug` | To which log level `dir()` and `dirxml()` should output it's messages.
-tableLevel                | `string`   | `info`  | To which log level `table()` should output. it's messages
-printTrace                | `boolean`  | `false` | Print stack trace when using `trace()`.
-stackTraceLimit           | `number`   | `10`    | How many lines of the stack `trace()` function should print.
-includeFunctionInCategory | `boolean`  | `true`  | Wether or not to include function and class names in automatically generated category name
-ignoreCategoryElements    | `string[]` | `[]`    | List of strings to ignore when constructing category name.
-inspectDepth              | `number`   | `20`    | How deep objects should be stringified when formatting them with `inspect()`
-inspectCompact            | `boolean`  | `true` | Compact objecst when converting them to string using `inspect()`
+| Option                    | Type       | Default | Description                                                                                |
+| ------------------------- | ---------- | ------- | ------------------------------------------------------------------------------------------ |
+| watchConfig               | `boolean`  | `false` | Watch the configuration file for changes and reload log4js-node when it changes.           |
+| assertLevel               | `string`   | `warn`  | To which log level `assert()` should output it's messages.                                 |
+| countLevel                | `string`   | `debug` | To which log level `count()` should output it's messages.                                  |
+| dirLevel                  | `string`   | `debug` | To which log level `dir()` and `dirxml()` should output it's messages.                     |
+| tableLevel                | `string`   | `info`  | To which log level `table()` should output it's messages.                                  |
+| includeFunctionInCategory | `boolean`  | `true`  | Wether or not to include function and class names in automatically generated category name |
+| ignoreCategoryElements    | `string[]` | `[]`    | List of strings to ignore when constructing category name.                                 |
 
-[1]: https://log4js-node.github.io/log4js-node/
-[2]: https://nodejs.org/docs/latest-v8.x/api/console.html
+Note that for `watchConfig` to work an optional dependency `node-watch` needs to be installed and the `config` passed
+needs to be a string containing path to a json file containing log4js-node configuration.
 
 ## License
 

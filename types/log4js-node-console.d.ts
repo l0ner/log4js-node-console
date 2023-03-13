@@ -18,29 +18,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 type Log4jsConfig = | string | object;
 
-export interface Log4jsConsole
-{
-	constructor(config: Log4jsConfig, options?: Configuration): Log4jsConsole;
-
-	clear(): undefined;
-	group(...label: any): undefined;
-	groupCollapsed(): undefined;
-	groupEnd(): undefined;
-	info(data?: any, ...args: any): undefined;
-	log(data?: any, ...args: any): undefined;
-	table(tabularData: any, properties?: string[]): undefined;
-	time(label?: string): undefined;
-	timeEnd(label?: string): undefined;
-	timeLog(label?: string, ...data: any): undefined;
-	trace(message?: any, ...args: any): undefined;
-	warn(data?: any, ...args: any): undefined;
-	profile(label?: string): undefined;
-	profileEnd(label?: string): undefined;
-	timeStamp(label?: string): undefined;
-
-}
-
-export interface Configuration
+export interface Log4jsConsoleOptions
 {
 	watchConfig: boolean;
 	assertLevel: string | Levels;
@@ -48,8 +26,8 @@ export interface Configuration
 	dirLevel: string | Levels;
 	tableLevel: string | Levels;
 	timeLevel: string | Levels;
-	printTrace: boolean;
-	stackTraceLimit: number;
+	includeFunctionInCategory: boolean;
+	ignoreCategoryElements: string[];
 }
 
 export enum Levels {
