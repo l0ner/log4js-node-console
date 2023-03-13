@@ -1,13 +1,13 @@
 {
 	"name": "log4js-node-console",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Compatibility layer between log4js and Node.js console",
 	"homepage": "https://github.com/l0ner/log4js-node-console#readme",
 	"bugs": {"url": "https://github.com/l0ner/log4js-node-console/issues"},
 	"repository": "github:l0ner/log4js-node-console",
 	"main": "src/log4js-node-console.js",
 	"types": "types/log4js-node-console.d.ts",
-	"files": ["types/log4js-node-console.d.ts", "README.md", "LICENSE.md"],
+	"files": ["types/log4js-node-console.d.ts", "README.md", "LICENSE.md", "src/logStream.js"],
 	"exports": {
 		"."          : "./src/log4js-node-console.js",
 		"./logStream": "./src/logStream.js"
