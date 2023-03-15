@@ -34,7 +34,7 @@ class Log4JsStream extends Writable {
 	#defaultConsole;
 	#stackTraceLimit = 15;
 
-	#ignoreCategoryElements = ['', 'node_modules', '<anonymous>', 'Object', 'Timeout', '_onTimeout'];
+	#ignoreCategoryElements = ['', '<anonymous>', 'Object', 'Timeout', '_onTimeout'];
 	#includeFunctionInCategory = true;
 
 	#addLevels = {
@@ -178,8 +178,26 @@ class Log4JsStream extends Writable {
 			callerFileElements = callerFileElements.filter(v => v !== elem);
 		// this.#defaultConsole.debug('Caller file elements', callerFileElements);
 
+		// at this point, if the file elements starts with node_modules, treat it specially
+		if(callerFileElements[0] === 'node_modules') {
+			callerFileElements.shift() // remove node_modules
+
+			const libraryNameElements = ['modules'];
+
+			let tmp = callerFileElements.shift();
+			if(tmp.startsWith('@')) { // scoped package
+				libraryNameElements.push(tmp)
+				tmp = callerFileElements.shift();
+			}
+
+			libraryNameElements.push(tmp);
+
+			// this.#defaultConsole.debug('Remaining items in file elements', callerFileElements);
+
+			callerFileElements = libraryNameElements;
+		}
+
 		let caller = callerFileElements.join('.');
-		// this.#defaultConsole.debug('Caller', caller);
 		// this.#defaultConsole.debug('Caller', caller);
 
 		const functionName = stack.pop();
@@ -196,6 +214,11 @@ class Log4JsStream extends Writable {
 
 		// this.#defaultConsole.debug('Caller', caller);
 
+		// make sure that the caller name never starts with a dot
+		if (caller.startsWith('.'))
+		caller = caller.substring(1);
+
+		this.#defaultConsole.debug('Returning caller', caller);
 		return caller;
 	}
 }

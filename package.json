@@ -1,6 +1,6 @@
 {
 	"name": "log4js-node-console",
-	"version": "1.2.1",
+	"version": "1.2.2",
 	"description": "Compatibility layer between log4js and Node.js console",
 	"homepage": "https://github.com/l0ner/log4js-node-console#readme",
 	"bugs": {"url": "https://github.com/l0ner/log4js-node-console/issues"},
