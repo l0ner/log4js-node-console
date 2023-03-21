@@ -218,7 +218,7 @@ class Log4JsStream extends Writable {
 		if (caller.startsWith('.'))
 		caller = caller.substring(1);
 
-		this.#defaultConsole.debug('Returning caller', caller);
+		// this.#defaultConsole.debug('Returning caller', caller);
 		return caller;
 	}
 }
