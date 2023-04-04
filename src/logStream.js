@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-const { Writable } = require("node:stream");
+const { Writable } = require("stream");
 const AppRootDir = require("app-root-dir");
 const log4js = require('log4js');
 
@@ -91,7 +91,13 @@ class Log4JsStream extends Writable {
 
 		// this.#defaultConsole.debug(stackTrace);
 
-		const levelIndex = stackTrace.findLastIndex(str => str.match(/console\..*/gu));
+		// Find last
+		let levelIndex;
+		for (let i = 0; i < stackTrace.length; i++) {
+			if (stackTrace[i].match(/console\..*/gu))
+				levelIndex = i;
+		}
+
 		// this.#defaultConsole.debug("Level index", levelIndex);
 
 		this.#writeToLogger(
