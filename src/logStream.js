@@ -19,6 +19,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 const { Writable } = require("stream");
 const AppRootDir = require("app-root-dir");
 const log4js = require('log4js');
+const path = require('path')
 
 let watch = null;
 // check if the optional node-watch has been installed nad ignore error
@@ -36,6 +37,7 @@ class Log4JsStream extends Writable {
 
 	#ignoreCategoryElements = ['', '<anonymous>', 'Object', 'Timeout', '_onTimeout'];
 	#includeFunctionInCategory = true;
+	#modulePrefix = "@modules";
 
 	#addLevels = {
 		assert: "warn",
@@ -70,6 +72,9 @@ class Log4JsStream extends Writable {
 
 		if (options?.timeLevel)
 			this.#addLevels["timeEnd"] = options.timeLevel.toLowerCase();
+
+		if (options?.modulePrefix)
+			this.#modulePrefix = options.modulePrefix;
 
 		if (options?.includeFunctionInCategory)
 			this.#includeFunctionInCategory = options.includeFunctionInCategory;
@@ -160,72 +165,98 @@ class Log4JsStream extends Writable {
 	{
 		let stack = callString.split(' ');
 
+		// this.#defaultConsole.group("getCallerName");
+
 		// filter out stack garbage
 		stack = stack.filter(v => (v !== ''));
 
-		// handle ESModule anonymous file level calls
-		if (stack.length === 1 && stack[0].startsWith('file://')) {
-			stack.unshift('Object.<anonymous>');
-			stack[1] = `(${stack[1]})`;
+		let functionName;
+		let fileElement;
+		if(stack.length === 2) {
+			// we have class.function at first position and file at second position
+			[functionName, fileElement] = stack;
+		} else if (stack.length === 1) {
+			// we have only file element
+			[fileElement] = stack;
+		} else {
+			this.#defaultConsole.error(`Error while evaluating caller name, too manu or too few elements in the caller name stack`);
+			// this.#defaultConsole.groupEnd("getCallerName");
+			return "unknown";
 		}
-		stack[1] = stack[1].replace('file://', '');
 
-		// this.#defaultConsole.debug('Stack elements', stack);
+		let callerElements = [];
+		// first handle file element
+		if(fileElement) { // we should always have this, but you can be never sure
 
-		// this.#defaultConsole.debug('App root dir', appRootDir);
-		let callerFileElements = stack.pop()
-			.replace(appRootDir, '')
-			.split('.')[0]
-			.split('/')
-			.slice(1);
-		// this.#defaultConsole.debug('caller file elements', callerFileElements);
+			// handle paths enclosed with ()
+			fileElement = fileElement.replace(/\((.*)\)/g, "$1");
+			// this.#defaultConsole.debug("File string", fileElement);
 
-		for(const elem of this.#ignoreCategoryElements)
-			callerFileElements = callerFileElements.filter(v => v !== elem);
-		// this.#defaultConsole.debug('Caller file elements', callerFileElements);
+			// path.sep
+			if (fileElement.startsWith(`file:${path.sep}${path.sep}`)) {
+				// this.#defaultConsole.debug("Found file:// at the start");
+				fileElement = fileElement.replace('file://', '');
+			}
+			// this.#defaultConsole.debug("File string", fileElement);
 
-		// at this point, if the file elements starts with node_modules, treat it specially
-		if(callerFileElements[0] === 'node_modules') {
-			callerFileElements.shift() // remove node_modules
+			fileElement = fileElement.replace(appRootDir + path.sep, '');
+			// this.#defaultConsole.debug("File string", fileElement);
 
-			const libraryNameElements = ['modules'];
+			// get only filename, ignore location
+			[fileElement] = fileElement.split(':');
+			// this.#defaultConsole.debug("File string", fileElement);
 
-			let tmp = callerFileElements.shift();
-			if(tmp.startsWith('@')) { // scoped package
-				libraryNameElements.push(tmp)
-				tmp = callerFileElements.shift();
+			// last dot determines extension
+			fileElement = fileElement.split('.').slice(0, -1).join('.');
+			// this.#defaultConsole.debug("File string", fileElement);
+
+			// replace all remaining dots (hopefully)
+			fileElement = fileElement.replace(/\./g,'_');
+			// this.#defaultConsole.debug("File string", fileElement);
+
+			let fileElements = fileElement.split(path.sep);
+			// this.#defaultConsole.debug("file elements", fileElements);
+
+			// filter out stuff we don't want
+			for(const elem of this.#ignoreCategoryElements)
+				fileElements = fileElements.filter(v => v !== elem);
+
+			// Special handling for stuff that came from node_modules
+			if(fileElements[0] === 'node_modules') {
+				callerElements.push(this.#modulePrefix);
+				fileElements.shift();
+
+				// check for scoped modules
+				if (fileElements[0].startsWith('@') && fileElements.length >= 2)
+					callerElements.push(`${fileElements[0]}/${fileElements[1]}`);
+				else
+					callerElements.push(fileElements[0]);
+
+				// ignore the rest as we don't want to know which file precisely logged
+			} else {
+				callerElements = fileElements;
 			}
 
-			libraryNameElements.push(tmp);
-
-			// this.#defaultConsole.debug('Remaining items in file elements', callerFileElements);
-
-			callerFileElements = libraryNameElements;
+			// this.#defaultConsole.debug("final caller file elements", callerElements);
 		}
 
-		let caller = callerFileElements.join('.');
-		// this.#defaultConsole.debug('Caller', caller);
-
-		const functionName = stack.pop();
 		// this.#defaultConsole.debug('Caller function: ', functionName);
-		if(this.#includeFunctionInCategory && functionName !== 'Object.<anonymous>') {
+		if(functionName && this.#includeFunctionInCategory && functionName !== 'Object.<anonymous>') {
 			let callerFunction = functionName.split('.');
 
 			for(const elem of this.#ignoreCategoryElements)
 				callerFunction = callerFunction.filter(v => v !== elem);
 			// this.#defaultConsole.debug('Caller function elements', callerFunction);
-			if(callerFunction.length > 0)
-				caller += `.${callerFunction.join('.')}()`; // always remove 'Object' to make modules appear nicely
+
+			if (callerFunction.length > 0)
+				callerElements.push(...callerFunction);
 		}
 
-		// this.#defaultConsole.debug('Caller', caller);
-
-		// make sure that the caller name never starts with a dot
-		if (caller.startsWith('.'))
-		caller = caller.substring(1);
+		// this.#defaultConsole.debug("final caller elements", callerElements);
 
 		// this.#defaultConsole.debug('Returning caller', caller);
-		return caller;
+		// this.#defaultConsole.groupEnd("getCallerName");
+		return callerElements.join('.');
 	}
 }
 

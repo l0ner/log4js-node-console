@@ -1,30 +1,51 @@
 {
 	"name": "log4js-node-console",
-	"version": "1.2.4",
+	"version": "1.2.6",
 	"description": "Compatibility layer between log4js and Node.js console",
 	"homepage": "https://github.com/l0ner/log4js-node-console#readme",
-	"bugs": {"url": "https://github.com/l0ner/log4js-node-console/issues"},
+	"bugs": {
+		"url": "https://github.com/l0ner/log4js-node-console/issues"
+	},
 	"repository": "github:l0ner/log4js-node-console",
 	"main": "src/log4js-node-console.js",
-	"types": "types/log4js-node-console.d.ts",
-	"files": ["types/log4js-node-console.d.ts", "README.md", "LICENSE.md", "src/logStream.js"],
-	"exports": {
-		"."          : "./src/log4js-node-console.js",
-		"./logStream": "./src/logStream.js"
+	"files": [
+		"src",
+		"README.md",
+		"LICENSE.md"
+	],
+	"keywords": [
+		"logging",
+		"log",
+		"console",
+		"log4js",
+		"node"
+	],
+	"directories": {
+		"lib": "src"
 	},
-	"keywords": ["logging", "log", "console", "log4js", "node"],
-	"directories": {"lib": "src"},
-	"engines": {"node": ">=14.15.1"},
-	"browser": {"os": false},
-	"scripts": {"typings": "tsc -p types/tsconfig.json"},
+	"engines": {
+		"node": ">=14.15.1"
+	},
+	"browser": {
+		"os": false
+	},
+	"scripts": {
+		"prepublishOnly": "find src -type f -iname '*.d.ts' -delete -o -iname '*.d.ts.map' -delete && tsc"
+	},
 	"author": "Pawel Soltys <pwslts@gmail.com> (https://github.com/l0ner)",
 	"license": "GPL-3.0-or-later",
 	"devDependencies": {
-		"eslint"                         : "^8.31.0",
-		"eslint-plugin-align-assignments": "^1.1.2" ,
-		"eslint-plugin-eslint-comments"  : "^3.2.0" ,
-		"eslint-plugin-jsdoc"            : "^39.6.4"
+		"@types/node": "^20.2.1",
+		"eslint": "^8.31.0",
+		"eslint-plugin-align-assignments": "^1.1.2",
+		"eslint-plugin-eslint-comments": "^3.2.0",
+		"eslint-plugin-jsdoc": "^39.6.4"
 	},
-	"dependencies": {"app-root-dir": "^1.0.2", "log4js": "^6.7.1"},
-	"optionalDependencies": {"node-watch": "^0.7.3"}
+	"dependencies": {
+		"app-root-dir": "^1.0.2",
+		"log4js": "^6.7.1"
+	},
+	"optionalDependencies": {
+		"node-watch": "^0.7.3"
+	}
 }

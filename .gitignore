@@ -135,4 +135,7 @@ config/*
 screenshots
 prove
 
-ts-build/*
+# Typescript type definitions
+# Those should not be stored in the code repo but generated before every npm publish
+*.d.ts
+*.d.ts.map

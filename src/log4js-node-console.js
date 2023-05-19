@@ -29,6 +29,7 @@ const Log4JsStream = require('./logStream.js');
  * @property {string} dirLevel - To which log level `dir()` and `dirxml()` should output it's messages.
  * @property {string} tableLevel - To which log level `table()` should output it's messages.
  * @property {string} timeLevel - To which log level `timeEdn()` should output it's messages.
+ * @property {string} modulePrefix - Prefix to use for files coming from node_modules.
  * @property {boolean} includeFunctionInCategory - Wether or not to include function and class names in automatically generated category name.
  * @property {string[]} ignoreCategoryElements - List of strings to ignore when constructing category name.
  */
