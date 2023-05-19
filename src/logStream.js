@@ -36,6 +36,7 @@ class Log4JsStream extends Writable {
 	#stackTraceLimit = 15;
 
 	#ignoreCategoryElements = ['', '<anonymous>', 'Object', 'Timeout', '_onTimeout'];
+	#replaceCategoryElements = [];
 	#includeFunctionInCategory = true;
 	#modulePrefix = "@modules";
 
@@ -81,6 +82,9 @@ class Log4JsStream extends Writable {
 
 		if (options?.ignoreCategoryElements)
 			this.#ignoreCategoryElements = this.#ignoreCategoryElements.concat(options.ignoreCategoryElements);
+
+		if (options?.replaceElements)
+			this.#replaceCategoryElements = options.replaceElements;
 	}
 
 	_write(chunk, encoding, callback) {
@@ -254,9 +258,18 @@ class Log4JsStream extends Writable {
 
 		// this.#defaultConsole.debug("final caller elements", callerElements);
 
+		let caller = callerElements.join('.')
+
+		for (const replace of this.#replaceCategoryElements) {
+			// this.#defaultConsole.debug(caller);
+			// this.#defaultConsole.debug(`Replacing ${replace.source} with ${replace.replacement}`);
+			caller = caller.replace(replace.source, replace.replacement);
+			// this.#defaultConsole.debug(caller);
+		}
+
 		// this.#defaultConsole.debug('Returning caller', caller);
 		// this.#defaultConsole.groupEnd("getCallerName");
-		return callerElements.join('.');
+		return caller;
 	}
 }
 

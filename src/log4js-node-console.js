@@ -20,6 +20,16 @@ const { Console } = require("console");
 const Log4JsStream = require('./logStream.js');
 
 /**
+ * Strings to replace from category name. The replacement will be executed as the last step of category name generation,
+ * and thus source can be parts of the final category name. For example `@modules.fooLibrary.fooFunction` may be
+ * replaced with `BarFunction`.
+ *
+ * @typedef {object} CategoryReplace
+ * @property {string} source - What to replace in category name
+ * @property {string} replacement - What to insert instead in the category name.
+ */
+
+/**
  * Log4jsConsole options
  *
  * @typedef {object} Log4jsConsoleOptions
@@ -32,6 +42,7 @@ const Log4JsStream = require('./logStream.js');
  * @property {string} modulePrefix - Prefix to use for files coming from node_modules.
  * @property {boolean} includeFunctionInCategory - Wether or not to include function and class names in automatically generated category name.
  * @property {string[]} ignoreCategoryElements - List of strings to ignore when constructing category name.
+ * @property {CategoryReplace[]} replaceElements - List of strings to replace with something else in category name.
  */
 
 /**
