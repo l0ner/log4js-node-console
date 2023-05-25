@@ -174,19 +174,10 @@ class Log4JsStream extends Writable {
 		// filter out stack garbage
 		stack = stack.filter(v => (v !== ''));
 
-		let functionName;
-		let fileElement;
-		if(stack.length === 2) {
-			// we have class.function at first position and file at second position
-			[functionName, fileElement] = stack;
-		} else if (stack.length === 1) {
-			// we have only file element
-			[fileElement] = stack;
-		} else {
-			this.#defaultConsole.error(`Error while evaluating caller name, too manu or too few elements in the caller name stack`);
-			// this.#defaultConsole.groupEnd("getCallerName");
-			return "unknown";
-		}
+		// this.#defaultConsole.debug(stack);
+
+		let fileElement = stack.pop();
+		let functionName = stack.pop();
 
 		let callerElements = [];
 		// first handle file element
@@ -258,7 +249,11 @@ class Log4JsStream extends Writable {
 
 		// this.#defaultConsole.debug("final caller elements", callerElements);
 
-		let caller = callerElements.join('.')
+		let caller
+		if(callerElements.length)
+			caller = callerElements.join('.')
+		else
+			caller = 'unknown'
 
 		for (const replace of this.#replaceCategoryElements) {
 			// this.#defaultConsole.debug(caller);
