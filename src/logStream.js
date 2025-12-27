@@ -69,7 +69,7 @@ class Log4JsStream extends Writable {
 			this.#addLevels["dir"] = options.dirLevel.toLowerCase();
 
 		if (options?.tableLevel)
-			this.#addLevels["table"] = options.dirLevel.toLowerCase();
+			this.#addLevels["table"] = options.tableLevel.toLowerCase();
 
 		if (options?.timeLevel)
 			this.#addLevels["timeEnd"] = options.timeLevel.toLowerCase();
